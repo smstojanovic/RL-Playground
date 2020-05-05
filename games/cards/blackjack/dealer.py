@@ -5,7 +5,7 @@ class BJDealer(BJPlayer):
     def __init__(self, deck):
         super().__init__(deck)
 
-        self.critical_value = 22 # change to 23 be used to push at 22.
+        self.critical_value = 23 # change to 23 be used to push at 22.
         self.stop_value = 17
         self.hit()
 
@@ -19,10 +19,15 @@ class BJDealer(BJPlayer):
             if self.bust:
                 break
 
+            if self.is_push():
+                break
+
             val = self.get_max_value()
             if val >= self.stop_value:
                 playing = False
 
+    def is_push(self):
+        return self.get_min_value() == 22
 
 #
 # dealer = BJDealer(deck)

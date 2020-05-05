@@ -56,6 +56,13 @@ class StandardBJDeck(Deck):
             split_idx = int(split*num_cards)
             self._cards = self._cards[:split_idx]
 
+class CustomBJDeck(Deck):
+    def __init__(self, cards, shuffle = False):
+        super().__init__(cards)
+
+        if shuffle:
+            self.shuffle()
+
 
 # deck = StandardBJDeck(num_decks = 5)
 # card = deck.draw()

@@ -10,6 +10,9 @@ class BJPlayer:
 
         self.critical_value = 22
 
+    def set_deck(self, deck):
+        self._deck = deck
+
     def hit(self, verbose = False):
         if self.bust:
             raise EnvironmentError('Player is bust.')
@@ -46,6 +49,12 @@ class BJPlayer:
     def get_max_value(self):
         try:
             return max(self.values)
+        except:
+            return min(self.get_values_from_hand())
+
+    def get_min_value(self):
+        try:
+            return min(self.values)
         except:
             return min(self.get_values_from_hand())
 
