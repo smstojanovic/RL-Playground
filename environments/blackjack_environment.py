@@ -1,5 +1,6 @@
 from environments.env import Env
 from games.cards.blackjack.game import BlackJackGame, Action
+import numpy as np
 
 class BlackJackEnv(Env):
     def __init__(self, num_decks = 6):
