@@ -47,8 +47,10 @@ import numpy as np
 
 q_table = np.zeros([bjenv.state_bounds()[1], len(bjenv.action_space) ])
 
+q_table.shape
 
 
+bjenv.encode(9)
 
 
 #%%time
@@ -60,7 +62,7 @@ from IPython.display import clear_output
 # Hyperparameters
 alpha = 0.1
 gamma = 0.7
-epsilon = 0.15
+epsilon = 0.25
 
 # For plotting metrics
 all_epochs = []
@@ -73,7 +75,7 @@ for i in range(1, 100001):
     done = False
 
     while not done:
-        if random.uniform(0, 1) < epsilon:
+        if random.uniform(0, 1) < epsilon or min(q_table[state,:]) == max(q_table[state, :]):
             action_idx, action = bjenv.sample_action() # Explore action space
         else:
             action_idx = np.argmax(q_table[state]) # Exploit learned values
