@@ -42,6 +42,9 @@ class Deck:
 
         return card
 
+    def len_cards(self):
+        return len(self._cards)
+
 
 
 # card = Card('5','Spade')

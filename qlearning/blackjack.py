@@ -1,11 +1,13 @@
 
-from environments.blackjack_environment import BlackJackEnv
+from environments.blackjack_environment import BlackJackEnv, PlayerType
 
 bjenv = BlackJackEnv()
 self = bjenv
 bjenv.render()
 
 bjenv.s
+
+bjenv.encode(bjenv.s)
 
 print("Action Space {}".format(bjenv.action_space))
 
@@ -49,7 +51,7 @@ q_table = np.zeros([bjenv.state_bounds()[1], len(bjenv.action_space) ])
 
 
 
-%%time
+#%%time
 """Training the agent"""
 
 import random
@@ -96,6 +98,20 @@ for i in range(1, 100001):
         print(f"Episode: {i}")
 
 print("Training finished.\n")
+
+100 % 3
+
+bjenv.s % bjenv.game.dealer.critical_value
+
+bjenv.player_decode(PlayerType.Dealer)
+bjenv.player_decode(PlayerType.Player)
+
+
+bjenv.game.dealer.render()
+bjenv.game.player.render()
+
+bjenv.decode()
+
 
 def play_game():
     state = bjenv.reset()

@@ -9,16 +9,22 @@ class PlayerType(Enum):
 
 
 class BlackJackEnv(Env):
-    def __init__(self, num_decks = 6):
+    def __init__(self, num_decks = 6, cards_before_restart = 52):
         self.num_decks = num_decks
-        self.game = BlackJackGame(num_decks)
+        self.cards_before_restart = cards_before_restart
+
+        self.game = BlackJackGame(num_decks, False, cards_before_restart)
         self.action_space = [Action.Hit, Action.Stay]
 
-        self.max_val = 22
+        self.max_val = 23
         self.s = self.decode()
 
-    def reset(self):
-        self.game = BlackJackGame(self.num_decks)
+    def reset(self, reset_deck = True):
+        if reset_deck:
+            self.game = BlackJackGame(self.num_decks, False, self.cards_before_restart)
+        else:
+            self.game.new_game()
+
         state = self.decode()
         self.s = state
         return state
@@ -26,15 +32,32 @@ class BlackJackEnv(Env):
     def render(self):
         self.game.render()
 
-    def decode(self):
-        dealer_decode = self.player_decode(PlayerType.Player)
-        player_decode = self.player_decode(PlayerType.Dealer)
+    def decode():
+        # TODO: add a state for cards in play
+        return self.decode_game()
 
-        return dealer_decode + player_decode*self.dealer.critical_value
+    def decode_game(self):
+        dealer_decode = self.player_decode(PlayerType.Dealer)
+        player_decode = self.player_decode(PlayerType.Player)
+
+        return dealer_decode + player_decode*self.game.dealer.critical_value
+
+    def encode(self, state_value):
+        d = state_value % self.game.dealer.critical_value
+        dealer_max = d + self.get_player_min_value(PlayerType.Dealer)
+
+        p = int((state_value - d)/self.game.dealer.critical_value)
+        player_max = p + self.get_player_min_value(PlayerType.Player)
+
+        return {
+            'player_max_value' : player_max,
+            'dealer_max_value' : dealer_max
+        }
 
     def state_bounds(self):
-        min = 0 # TODO: make this programatic
-        max = (self.dealer.critical_value - 2) + (self.player.critical_value - 4)*(self.dealer.critical_value) # TODO: make this programatic
+        min = 0
+        max = (self.game.dealer.critical_value - self.get_player_min_value(PlayerType.Dealer)) +\
+              (self.game.player.critical_value - self.get_player_min_value(PlayerType.Dealer))*(self.game.dealer.critical_value)
 
         return min, max
 

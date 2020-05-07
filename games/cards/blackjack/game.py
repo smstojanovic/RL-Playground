@@ -2,6 +2,7 @@ from enum import Enum
 from games.cards.blackjack.player import BJPlayer
 from games.cards.blackjack.dealer import BJDealer
 from games.cards.blackjack.bj_cards import StandardBJDeck, CustomBJDeck, BJCard
+import warnings
 
 class Action(Enum):
     Hit = 'Hit'
@@ -9,11 +10,20 @@ class Action(Enum):
 
 
 class BlackJackGame:
-    def __init__(self, num_decks = 6, verbose = False):
+    def __init__(self, num_decks = 6, verbose = False, cards_before_restart = 52):
+        self._num_decks = num_decks
         self.deck = StandardBJDeck(num_decks)
-        self._init_game(verbose)
+        self.new_game(verbose, cards_before_restart)
 
-    def _init_game(self, verbose = False):
+    def new_game(self, verbose = False, cards_before_restart = 52):
+        if cards_before_restart < 20:
+            warnings.warn('Warning, number of cards before restart is low to keep playing')
+
+        num_cards = self.num_cards_left()
+        if num_cards < cards_before_restart:
+            # reshuffle new deck
+            self.deck = StandardBJDeck(self._num_decks)
+
         self.dealer = BJDealer(self.deck)
         self.player = BJPlayer(self.deck)
 
@@ -25,9 +35,12 @@ class BlackJackGame:
 
         self.stop = False
 
-    def set_deck(self, deck, verbose = False):
+    def num_cards_left(self):
+        return self.deck.len_cards()
+
+    def set_deck(self, deck, verbose = False, cards_before_restart = 52):
         self.deck = deck
-        self._init_game(verbose)
+        self.new_game(verbose, cards_before_restart)
 
     def get_player(self):
         return self.player

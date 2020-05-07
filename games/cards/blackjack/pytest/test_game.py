@@ -1,6 +1,3 @@
-import os
-print(os.getcwd())
-
 import pytest
 from games.cards.blackjack.game import BlackJackGame, Action
 from games.cards.blackjack.bj_cards import BJCard, CustomBJDeck, StandardBJDeck
@@ -19,7 +16,7 @@ def test_dealer_push():
 
     cards.reverse()
     cdeck = CustomBJDeck(cards, False)
-    bjgame.set_deck(cdeck, False)
+    bjgame.set_deck(cdeck, False, cards_before_restart = 0)
 
     done, reward = bjgame.take_action(Action.Stay)
 
@@ -42,7 +39,7 @@ def test_dealer_continue():
 
     cards.reverse()
     cdeck = CustomBJDeck(cards, False)
-    bjgame.set_deck(cdeck, False)
+    bjgame.set_deck(cdeck, False, cards_before_restart = 0)
 
     done, reward = bjgame.take_action(Action.Stay)
 
@@ -65,7 +62,7 @@ def test_dealer_bust():
 
     cards.reverse()
     cdeck = CustomBJDeck(cards, False)
-    bjgame.set_deck(cdeck, False)
+    bjgame.set_deck(cdeck, False, cards_before_restart = 0)
 
     done, reward = bjgame.take_action(Action.Stay)
 
