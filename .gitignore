@@ -1,2 +1,8 @@
 # pycache
 *.pyc
+
+# virtual envs
+.venv
+
+# environment variables
+.env
