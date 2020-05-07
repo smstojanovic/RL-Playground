@@ -32,7 +32,7 @@ class BlackJackEnv(Env):
     def render(self):
         self.game.render()
 
-    def decode():
+    def decode(self):
         # TODO: add a state for cards in play
         return self.decode_game()
 
