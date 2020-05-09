@@ -42,6 +42,12 @@ class BlackJackGame:
         self.deck = deck
         self.new_game(verbose, cards_before_restart)
 
+    def get_deck_hist_vec(self):
+        """
+            Gets a vector representation of the history of the deck in play for this game.
+        """
+        return self.deck.decode_card_history()
+
     def get_player(self):
         return self.player
 
