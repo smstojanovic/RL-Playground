@@ -31,6 +31,7 @@ class Card:
 class Deck:
     def __init__(self, cards):
         self._cards = cards
+        self._card_history = []
 
     def shuffle(self):
         np.random.shuffle(self._cards)
@@ -40,10 +41,15 @@ class Deck:
         if not discard:
             self._cards = [card] + self._cards
 
+        self._card_history.append(card)
+
         return card
 
     def len_cards(self):
         return len(self._cards)
+
+    def get_card_history(self):
+        return self._card_history
 
 
 

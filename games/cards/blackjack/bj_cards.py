@@ -1,4 +1,5 @@
 from itertools import product
+import numpy as np
 
 _card_values = {
     '2' : {'values' : [2]},
@@ -37,7 +38,38 @@ class BJCard(Card):
 
         return self.values[index]
 
-class StandardBJDeck(Deck):
+class BJDeck(Deck):
+    """
+        Different BJ Decks can inherit methods from here.
+        BJ Decks all use BJ Cards (which have a value assigned to them.)
+    """
+    def __init__(self, cards):
+        super().__init__(cards)
+
+        min_card_val = min([max(v['values']) for k,v in _card_values.items()])
+        max_card_val = max([max(v['values']) for k,v in _card_values.items()])
+
+        vec_len = (max_card_val - min_card_val) + 1
+        self.card_hist_vec = np.zeros([1,vec_len])
+        self._history_index = 0
+
+    def decode_card_history(self):
+        """
+            This method gets a (relatively fast) vector representation of which cards have been
+            drawn (by card value) by remembering which cards in the history have already been counted.
+        """
+        latest_history = self.get_card_history()[self._history_index:]
+
+        for card in latest_history:
+            self._history_index += 1
+            card_val = max(card.values)
+            self.card_hist_vec[0,card_val-2] += 1
+
+        return self.card_hist_vec
+
+
+
+class StandardBJDeck(BJDeck):
     def __init__(self, num_decks = 6, split = None):
         all_cards = []
 
@@ -56,7 +88,8 @@ class StandardBJDeck(Deck):
             split_idx = int(split*num_cards)
             self._cards = self._cards[:split_idx]
 
-class CustomBJDeck(Deck):
+
+class CustomBJDeck(BJDeck):
     def __init__(self, cards, shuffle = False):
         super().__init__(cards)
 
@@ -66,7 +99,7 @@ class CustomBJDeck(Deck):
 
 # deck = StandardBJDeck(num_decks = 5)
 # card = deck.draw()
-#
+# self = deck
 # card.render()
 
 # t1 = [1,2]
