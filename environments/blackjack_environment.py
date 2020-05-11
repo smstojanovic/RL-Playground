@@ -102,6 +102,14 @@ class BlackJackEnvCC(BlackJackEnv):
         This environment extends the BlackJackEnv with card counting
     """
 
+    def reset(self, hard_reset=False):
+        super().reset(hard_reset)
+
+        state = self.decode()
+        self.s = state
+        return state
+
+
     def decode(self):
         game_decode = super().decode()
         deck_decode = self.decode_deck()
@@ -110,6 +118,7 @@ class BlackJackEnvCC(BlackJackEnv):
 
     def decode_deck(self):
         history_vec = self.game.get_deck_hist_vec()
+        return history_vec
 
     def encode(self, state_value):
         raise NotImplementedError('Still need to develop encoding for card counting environments.')

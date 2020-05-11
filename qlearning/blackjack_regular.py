@@ -1,5 +1,5 @@
 
-from environments.blackjack_environment import BlackJackEnv, PlayerType
+from environments.blackjack_environment import BlackJackEnv, PlayerType, BlackJackEnvCC
 
 bjenv = BlackJackEnv()
 self = bjenv
