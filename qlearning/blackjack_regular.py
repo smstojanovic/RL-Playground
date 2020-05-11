@@ -64,6 +64,10 @@ alpha = 0.1
 gamma = 0.7
 epsilon = 0.25
 
+# blackjack can be thought of as an episodic MDP so we might be able to set gamma to 1.
+# however, these episodes are so small and we generally only care about the relativity between
+# q-values at each state and rewards are 0 except for at the end of an episode that this shouldn't affect the result.
+
 # For plotting metrics
 all_epochs = []
 all_penalties = []
