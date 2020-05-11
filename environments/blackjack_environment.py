@@ -13,10 +13,9 @@ class BlackJackEnv(Env):
         The purpose of this environment is to provide an interface with a Blackjack game
         and observable states plus actions and rewards for Reinforcement learning.
     """
-    def __init__(self, num_decks = 6, cards_before_restart = 52, card_counting = False):
+    def __init__(self, num_decks = 6, cards_before_restart = 52):
         self.num_decks = num_decks
         self.cards_before_restart = cards_before_restart
-        self.card_counting = card_counting
 
         self.game = BlackJackGame(num_decks, False, cards_before_restart)
         self.action_space = [Action.Hit, Action.Stay]
@@ -39,16 +38,7 @@ class BlackJackEnv(Env):
 
     def decode(self):
         # TODO: add a state for cards in play
-        game_decode = self.decode_game()
-        if not self.card_counting:
-            return game_decode
-
-        deck_decode = self.decode_deck()
-        return game_decode, deck_decode
-
-    def decode_deck(self):
-        history_vec = self.game.get_deck_hist_vec()
-
+        return self.decode_game()
 
     def decode_game(self):
         dealer_decode = self.player_decode(PlayerType.Dealer)
@@ -57,9 +47,6 @@ class BlackJackEnv(Env):
         return dealer_decode + player_decode*self.game.dealer.critical_value
 
     def encode(self, state_value):
-        if self.card_counting:
-            raise NotImplementedError('Still need to develop encoding for card counting environments.')
-
         d = state_value % self.game.dealer.critical_value
         dealer_max = d + self.get_player_min_value(PlayerType.Dealer)
 
@@ -107,3 +94,22 @@ class BlackJackEnv(Env):
         self.s = state
 
         return state, reward, done, info
+
+
+
+class BlackJackEnvCC(BlackJackEnv):
+    """
+        This environment extends the BlackJackEnv with card counting
+    """
+
+    def decode(self):
+        game_decode = super().decode()
+        deck_decode = self.decode_deck()
+
+        return game_decode, deck_decode
+
+    def decode_deck(self):
+        history_vec = self.game.get_deck_hist_vec()
+
+    def encode(self, state_value):
+        raise NotImplementedError('Still need to develop encoding for card counting environments.')
