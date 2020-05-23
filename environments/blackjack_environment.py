@@ -70,6 +70,24 @@ class BlackJackEnv(Env):
             return 4
         return 2
 
+    def player_decode_vec(self, player_type):
+        if player_type == PlayerType.Player:
+            state_vec = np.zeros((self.game.player.critical_value,1))
+            val = self.game.player.get_max_value()
+            crit_value = self.game.player.critical_value
+        else:
+            state_vec = np.zeros((self.game.dealer.critical_value,1))
+            val = self.game.dealer.get_max_value()
+            crit_value = self.game.dealer.critical_value
+
+        if val > crit_value:
+            val = crit_value
+
+        state_vec[val-1] += 1
+
+        return state_vec
+
+
     def player_decode(self, player_type):
         sub = self.get_player_min_value(PlayerType.Dealer)
 
